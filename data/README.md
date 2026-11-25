@@ -6,3 +6,8 @@ python prepare_data.py /Midgard/home/$USER/DL-Adv-Project/data --raw-dir /local_
 ```
 
 # Encoding data
+
+Usage:
+``` 
+python encode_data.py /Midgard/home/$USER/DL-Adv-Project/data
+```
