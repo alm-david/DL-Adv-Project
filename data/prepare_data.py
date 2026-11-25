@@ -45,13 +45,17 @@ raw = Path(args.raw_dir) if args.raw_dir else out_dir / "raw"
 datasets = {
     ("food101", "train"): lambda: Food101(raw, split="train", download=True),
     ("food101", "test"): lambda: Food101(raw, split="test", download=True),
-    ("imagenette", "train"): lambda: Imagenette(raw, split="train", download=True),
-    ("imagenette", "val"): lambda: Imagenette(raw, split="val", download=True),
+    # Some torchvision versions raise if the folder already exists, so only download when it's missing.
+    ("imagenette", "train"): lambda: Imagenette(raw, split="train", download=not (raw / "imagenette2").exists()),
+    ("imagenette", "val"): lambda: Imagenette(raw, split="val", download=not (raw / "imagenette2").exists()),
 }
 
 for (name, split), make in datasets.items():
-    ds = make()
     out = out_dir / name
+    if (out / f"{split}_labels.npy").exists():  # labels are written last, so this split finished
+        print(f"{name}/{split}: already done, skipping")
+        continue
+    ds = make()
     out.mkdir(parents=True, exist_ok=True)
 
     # Written straight to disk, so the whole array never has to fit in RAM.
