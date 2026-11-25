@@ -16,6 +16,7 @@ import time
 from pathlib import Path
 
 import numpy as np
+import safetensors.torch  # noqa: F401  (older diffusers use safetensors.torch without importing it)
 import torch
 import torch.nn.functional as F
 from diffusers.models import AutoencoderKL
